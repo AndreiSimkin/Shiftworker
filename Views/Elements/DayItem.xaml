@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="Samokat.Views.Elements.DayItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Samokat.Views.Elements"
+             xmlns:el="clr-namespace:Samokat.Views.Elements"
+             xmlns:ef="clr-namespace:Samokat.Views.Effects"
+             xmlns:vm="clr-namespace:Samokat.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             Width="370"
+             Name="DayItemElement" Cursor="Hand"
+             >
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+            <i:InvokeCommandAction Command="{Binding ElementName=DayItemElement, Path=Command}" CommandParameter="{Binding ElementName=DayItemElement}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid Margin="10,5">
+        <Border  x:Name="MainBorder" Margin="4"
+                Background="Transparent"
+                BorderThickness="1,1,1,1"
+                CornerRadius="16,16,16,16"
+                >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Border 
+                Background="#009687"
+                BorderThickness="1,1,1,0"
+                CornerRadius="16,16,0,0"
+                >
+                        <TextBlock Foreground="White" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Date}"/>
+                    </Border>
+                </Grid>
+                <Border Grid.Row="1"
+                Background="#14171a"
+                BorderThickness="1,0,1,1"
+                CornerRadius="0,0,16,16"
+                >
+                    <ItemsControl Padding="10,10" BorderBrush="Transparent" Background="Transparent" Foreground="White" FontSize="14" ItemsSource="{Binding Schedule}"/>
+                </Border>
+                <ef:RippleEffect Grid.RowSpan="2"/>
+            </Grid>
+            <Border.Effect>
+                <DropShadowEffect Opacity="0.5" />
+            </Border.Effect>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Samokat.Views.Panels.CalendarPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Samokat.Views.Panels"
+             xmlns:el="clr-namespace:Samokat.Views.Elements"
+             xmlns:vm="clr-namespace:Samokat.ViewModels.Panels"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400"
+             x:Name="CalendarPanelElement"
+             >
+    <UserControl.DataContext>
+        <vm:CalendarPanelViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"  VerticalAlignment="Center" Orientation="Horizontal">
+            <ComboBox x:Name="MonthSelector" SelectedItem="{Binding CurrentMonth, Mode=TwoWay}" ItemsSource="{Binding Months}" Width="300" Margin="10">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding ElementName=DayPicker, Path=DataContext.ResetCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <el:MonthPicker Command="{Binding ElementName=CalendarPanelElement, Path=DataContext.AddMonthCommand}" x:Name="MonthPicker" />
+            <el:Button Margin="5" x:Name="DeleteMonthButton" Enabled="{Binding IsMonthSelected}" Command="{Binding DeleteCurrentMonthCommand}" RoundMaskColor="{Binding ElementName=CalendarPanelElement, Path=Background}" Width="25" Height="25" Cursor="Hand">
+                <materialDesign:PackIcon Kind="Trash" Cursor="Hand"/>
+            </el:Button>
+        </StackPanel>
+        <el:DayPicker Command="{Binding ElementName=CalendarPanelElement, Path=DataContext.AddDayCommand}" x:Name="DayPicker" Month="{Binding ElementName=MonthSelector, Path=SelectedItem}" Enabled="{Binding ElementName=CalendarPanelElement, Path=DataContext.IsMonthSelected}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1"/>
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl Padding="3,0" ItemsSource="{Binding Calendar}" Background="Transparent" BorderBrush="Transparent">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <el:DayItem Cursor="Hand" Command="{Binding ElementName=CalendarPanelElement, Path=Command}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

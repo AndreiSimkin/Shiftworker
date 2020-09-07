@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Samokat.Views.Elements.DayPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Samokat.Views.Elements"
+             xmlns:el="clr-namespace:Samokat.Views.Elements"
+             xmlns:vm="clr-namespace:Samokat.ViewModels.Elements"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             x:Name="DayPickerElement"
+             mc:Ignorable="d"
+             >
+    <UserControl.DataContext>
+        <vm:DayPickerViewModel/>
+    </UserControl.DataContext>
+    <materialDesign:PopupBox x:Name="PickerPopup" PlacementMode="BottomAndAlignCentres" PopupMode="Click" StaysOpen="True">
+        <materialDesign:PopupBox.Style>
+            <Style TargetType="materialDesign:PopupBox">
+                <Style.Setters>
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Style.Setters>
+                <Style.Triggers>
+                    <DataTrigger  Binding="{Binding ElementName=DayPickerElement, Path=Enabled }" Value="True">
+                        <Setter Property="IsHitTestVisible" Value="True" />
+                        <Setter Property="Opacity" Value="1" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </materialDesign:PopupBox.Style>
+        <materialDesign:PopupBox.ToggleContent>
+            <materialDesign:PackIcon Width="40" Height="40" Kind="CalendarAdd"/>
+        </materialDesign:PopupBox.ToggleContent>
+        <Border BorderThickness="1" BorderBrush="#0869b6">
+            <Grid ClipToBounds="True" Background="#252525">
+                <StackPanel>
+                    <Calendar SelectionMode="SingleDate" Grid.Row="0" SelectedDate="{Binding Current}" DisplayDateStart="{Binding ElementName=DayPickerElement, Path=Month.DateStart, Mode=OneWay}" DisplayDateEnd="{Binding ElementName=DayPickerElement, Path=Month.DateEnd, Mode=OneWay}" Margin="0,-35,0,0" BorderThickness="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotMouseCapture">
+                                <i:InvokeCommandAction Command="{Binding ReleaseMouseCaptureCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Calendar>
+                    <el:Button Grid.Row="1" x:Name="AddButton" Height="40" Content="Добавить" Cursor="Hand">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding ElementName=DayPickerElement, Path=Command}" CommandParameter="{Binding Current}"/>
+                                <i:ChangePropertyAction TargetObject="{Binding ElementName=PickerPopup}" PropertyName="IsPopupOpen" Value="False"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </el:Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </materialDesign:PopupBox>
+</UserControl>
